@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <set>
+#include <unordered_map>
 
 #include "aresta.h"
 
@@ -12,8 +13,12 @@ class Grafo {
         Grafo();
         void incluirAresta(Aresta* aresta);
         void imprimir();
-        double getDensidade();
+        void imprimeDensidade();
+        void imprimeVerticeMaiorCentralidadeDeGrau();
 
     private:
         vector<Aresta*> _arestas;
+        set<Vertice*> _vertices;
+        double calcularDensidade();
+        double calcularCentralidadeDeGrau(Vertice* vertice);
 };
