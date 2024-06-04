@@ -1,3 +1,6 @@
+#ifndef VERTICE_H
+#define VERTICE_H
+
 #include <iostream>
 #include <string>
 
@@ -13,3 +16,5 @@ class Vertice {
         string _id;
 
 };
+
+#endif // VERTICE_H

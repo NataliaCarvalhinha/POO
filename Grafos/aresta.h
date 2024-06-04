@@ -1,3 +1,6 @@
+#ifndef ARESTA_H
+#define ARESTA_H
+
 #include <iostream>
 #include <string>
 #include "vertice.h"
@@ -19,3 +22,6 @@ class Aresta {
         double _peso;
 
 };
+
+#endif // ARESTA_H
+

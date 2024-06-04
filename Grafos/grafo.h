@@ -1,3 +1,6 @@
+#ifndef GRAFO_H
+#define GRAFO_H
+
 #include <iostream>
 #include <vector>
 #include <set>
@@ -23,3 +26,5 @@ class Grafo {
         double calcularDensidade();
         double calcularCentralidadeDeGrau(Vertice* vertice);
 };
+
+#endif // GRAFO_H
