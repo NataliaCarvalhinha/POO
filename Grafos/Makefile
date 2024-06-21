@@ -1,4 +1,4 @@
-all: ./programa
+all:
 	g++ -o programa vertice.cpp aresta.cpp grafo.cpp main.cpp  && ./programa input.txt
 	
 clean: 
