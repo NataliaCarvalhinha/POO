@@ -1,0 +1,5 @@
+Calculo1 2021.1 4 7.8
+A 2021.2 4 6
+Quimica 2021.2 3 10
+Z 2021.2 4 6
+Circuitos Logicos 2023.1 4
