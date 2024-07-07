@@ -11,7 +11,7 @@ private:
     string estilo;
 
 public:
-    AtletaTenis(const string& nome, int ranking, const string estilo, const int idade);
+    AtletaTenis(const string& nome, const int idade, int ranking, const string estilo);
 
     void imprime(ostream& os) const override;
 };

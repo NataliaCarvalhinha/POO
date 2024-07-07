@@ -55,7 +55,7 @@ int main() {
                     cin >> estilo;
                     limpaBuffer();
 
-                    sistema.insere(AtletaTenis(nome, ranking, estilo, idade));
+                    sistema.insere(new AtletaTenis(nome, idade, ranking, estilo));
 
                 } else if (tipo == 2) {
                     string posicao;
@@ -63,10 +63,10 @@ int main() {
                     cin >> posicao;
                     limpaBuffer();
 
-                    sistema.insere(AtletaVolei(nome, idade, posicao));
+                    sistema.insere(new AtletaVolei(nome, idade, posicao));
                     
                 } else if (tipo == 0) {
-                    sistema.insere(Atleta(nome, idade));
+                    sistema.insere(new Atleta(nome, idade));
 
                 } else {
                     cout << "Opção inválida!" << endl;
@@ -81,10 +81,12 @@ int main() {
                 cin >> nome;
                 limpaBuffer();
 
-                if (sistema.busca(nome)) {
-                    cout << "Atleta " << nome << " encontrado." << endl;
+                Atleta* atletaAux = sistema.busca(nome);
+
+                if (atletaAux != nullptr) {
+                    cout << endl << "Atleta " << nome << " encontrado." << *atletaAux << endl;
                 } else {
-                    cout << "Atleta " << nome << " não encontrado." << endl;
+                    cout << endl << "Atleta " << nome << " não encontrado." << endl;
                 }
                 break;
             }
@@ -94,7 +96,7 @@ int main() {
                 cin >> nome;
                 limpaBuffer();
 
-                sistema.remove(Atleta(nome, 0));
+                sistema.remove(new Atleta(nome, 0));
                 break;
             }
             case 4:

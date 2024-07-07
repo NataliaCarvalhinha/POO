@@ -9,7 +9,7 @@ string Atleta::getNome() const {
 }
 
 void Atleta::imprime(ostream& os) const {
-    os << "---------------------" << endl 
+    os << endl << "---------------------" << endl 
     << "Nome: " << nome << ", " 
     << endl << "Idade: " << idade;
 }

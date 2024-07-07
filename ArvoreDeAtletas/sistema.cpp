@@ -1,14 +1,14 @@
 #include "sistema.h"
 
-void Sistema::insere(const Atleta& atleta) {
+void Sistema::insere(Atleta* atleta) {
     arvoreDeAtletas + atleta;
 }
 
-bool Sistema::busca(const string& nome) const {
+Atleta* Sistema::busca(const string& nome) const {
     return arvoreDeAtletas(Atleta(nome, 0));
 }
 
-void Sistema::remove(const Atleta& atleta) {
+void Sistema::remove(Atleta* atleta) {
     arvoreDeAtletas - atleta;
 }
 

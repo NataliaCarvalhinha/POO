@@ -13,11 +13,11 @@ class Sistema {
         Arvore<Atleta> arvoreDeAtletas;
 
     public:
-        void insere(const Atleta& atleta);
+        void insere(Atleta* atleta);
 
-        bool busca(const string& nome) const;
+        Atleta* busca(const string& nome) const;
 
-        void remove(const Atleta& atleta);
+        void remove(Atleta* atleta);
 
         void lista() const;
 
