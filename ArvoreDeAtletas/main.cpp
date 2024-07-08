@@ -108,6 +108,7 @@ int main() {
                 break;
             default:
                 cout << "Opção inválida!" << endl;
+                break;
         }
     }
 
