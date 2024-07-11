@@ -22,7 +22,7 @@ void menu() {
 }
 
 int main() {
-    Sistema sistema;
+    Sistema* sistema = new Sistema();
     int opcao;
     Produto* produto;
     int id;
@@ -35,6 +35,7 @@ int main() {
         menu();
         cout << "Escolha uma opção: ";
         cin >> opcao;
+        limpaBuffer();
 
         switch (opcao) {
             case 1:
@@ -43,19 +44,21 @@ int main() {
                 limpaBuffer();
                 cout << "Digite a quantidade: ";
                 cin >> quantidade;
+                limpaBuffer();
                 cout << "Digite o valor: ";
                 cin >> valor;
+                limpaBuffer();
                 produto = new Produto(nome, quantidade, valor, 0);
-                sistema.inserir(produto);
+                sistema->inserir(produto);
                 delete produto;
                 break;
             case 2:
                 cout << "Digite o nome do produto a ser removido: ";
                 cin >> nome;
                 limpaBuffer();
-                produto = sistema.buscar(nome);
+                produto = sistema->buscar(nome);
                 if (produto != nullptr) {
-                    sistema.remover(produto);
+                    sistema->remover(produto);
                     delete produto;
                 } else {
                     cout << "Produto não encontrado." << endl;
@@ -64,17 +67,20 @@ int main() {
             case 3:
                 cout << "Digite o código do produto a ser atualizado: ";
                 cin >> codigo;
-                produto = sistema.buscar(codigo);
+                limpaBuffer();
+                produto = sistema->buscar(codigo);
                 if (produto != nullptr) {
                     cout << "Digite o novo nome do produto: ";
                     cin >> nome;
                     limpaBuffer();
                     cout << "Digite a nova quantidade: ";
                     cin >> quantidade;
+                    limpaBuffer();
                     cout << "Digite o novo valor: ";
                     cin >> valor;
+                    limpaBuffer();
                     Produto* produtoAtualizado = new Produto(nome, quantidade, valor, codigo);
-                    sistema.atualizar(produtoAtualizado);
+                    sistema->atualizar(produtoAtualizado);
                     delete produtoAtualizado;
                     delete produto;
                 } else {
@@ -84,7 +90,8 @@ int main() {
             case 4:
                 cout << "Digite o ID do produto: ";
                 cin >> id;
-                produto = sistema.buscar(id);
+                limpaBuffer();
+                produto = sistema->buscar(id);
                 if (produto != nullptr) {
                     produto->imprime(cout);
                     delete produto;
@@ -96,7 +103,7 @@ int main() {
                 cout << "Digite o nome do produto: ";
                 cin >> nome;
                 limpaBuffer();
-                produto = sistema.buscar(nome);
+                produto = sistema->buscar(nome);
                 if (produto != nullptr) {
                     produto->imprime(cout);
                     delete produto;
@@ -105,7 +112,7 @@ int main() {
                 }
                 break;
             case 6:
-                sistema.listar();
+                sistema->listar();
                 break;
             case 0:
                 cout << "Saindo..." << endl;
@@ -115,6 +122,7 @@ int main() {
                 break;
         }
     } while (opcao != 0);
-
+    
+    delete sistema;
     return 0;
 }

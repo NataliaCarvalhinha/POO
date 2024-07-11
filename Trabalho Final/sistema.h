@@ -8,13 +8,14 @@
 class Sistema {
     public:
         Sistema();
+        ~Sistema();
         void inserir(Produto* produto);
         void remover(Produto* produto);
         void atualizar(Produto* produto);
         Produto* buscar(int id);
         Produto* buscar(string& nome);
         void listar();
-        Conexao conexao;
+        Conexao* conexao = nullptr;
 };
 
 #endif

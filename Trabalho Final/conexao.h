@@ -9,14 +9,16 @@
 using namespace std;
 
 class Conexao {
-public:
-    Conexao();
-    void inserir(Produto* produto);
-    void remover(Produto* produto);
-    void atualizar(Produto* produto);
-    Produto* buscar(int id);
-    Produto* buscar(string& nome);
-    void listar();
+    public:
+        Conexao();
+        ~Conexao();
+        void inserir(Produto* produto);
+        void remover(Produto* produto);
+        void atualizar(Produto* produto);
+        Produto* buscar(int id);
+        Produto* buscar(string& nome);
+        void listar();
+        PyObject *pModule = nullptr;
 };
 
 #endif
