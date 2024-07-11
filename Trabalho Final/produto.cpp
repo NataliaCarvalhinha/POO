@@ -1,29 +1,29 @@
 #include "produto.h"
 
-Produto::Produto(string& nome, int quantidade, double valor, int codigo)
+Produto::Produto(const string& nome, int quantidade, double valor, int codigo)
     : nome(nome), quantidade(quantidade), valor(valor), codigo(codigo) {}
 
-
-string Produto::getNome(){
+string Produto::getNome() const {
     return nome;
 }
 
-int Produto::getQuantidade(){
+int Produto::getQuantidade() const {
     return quantidade;
 }
 
-double Produto::getValor(){
+double Produto::getValor() const {
     return valor;
 }
 
-int Produto::getCodigo(){
+int Produto::getCodigo() const {
     return codigo;
 }
 
-void Produto::imprime(ostream& os){
+ostream& operator<<(ostream& os, const Produto& produto) {
     os << endl << "---------------------" << endl 
-    << "Nome: " << nome << ", " 
-    << endl << "Quantidade: " << quantidade
-    << endl << "Valor: " << valor
-    << endl << "Codigo: " << codigo;
+       << "Nome: " << produto.getNome() << ", " 
+       << endl << "Quantidade: " << produto.getQuantidade()
+       << endl << "Valor: " << produto.getValor()
+       << endl << "Codigo: " << produto.getCodigo();
+    return os;
 }

@@ -53,10 +53,10 @@ int main() {
                 delete produto;
                 break;
             case 2:
-                cout << "Digite o nome do produto a ser removido: ";
-                cin >> nome;
+                cout << "Digite o código do produto a ser removido: ";
+                cin >> id;
                 limpaBuffer();
-                produto = sistema->buscar(nome);
+                produto = sistema->buscar(id);
                 if (produto != nullptr) {
                     sistema->remover(produto);
                     delete produto;
@@ -83,9 +83,7 @@ int main() {
                     sistema->atualizar(produtoAtualizado);
                     delete produtoAtualizado;
                     delete produto;
-                } else {
-                    cout << "Produto não encontrado." << endl;
-                }
+                } 
                 break;
             case 4:
                 cout << "Digite o ID do produto: ";
@@ -93,10 +91,8 @@ int main() {
                 limpaBuffer();
                 produto = sistema->buscar(id);
                 if (produto != nullptr) {
-                    produto->imprime(cout);
+                    cout << produto;
                     delete produto;
-                } else {
-                    cout << "Produto não encontrado." << endl;
                 }
                 break;
             case 5:
@@ -105,10 +101,8 @@ int main() {
                 limpaBuffer();
                 produto = sistema->buscar(nome);
                 if (produto != nullptr) {
-                    produto->imprime(cout);
+                    cout  << produto;
                     delete produto;
-                } else {
-                    cout << "Produto não encontrado." << endl;
                 }
                 break;
             case 6:

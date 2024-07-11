@@ -40,19 +40,17 @@ def atualizarProduto(codigo_produto, novo_nome_produto, nova_quantidade_produto,
         val = (novo_nome_produto, nova_quantidade_produto, novo_valor_produto, codigo_produto)
         cursor.execute(sql, val)
         conn.commit()
-        print(f"Produto com ID {codigo_produto} atualizado")
         desconectarMysql(cursor, conn)
     except mysql.connector.Error as erro:
         print(f"Erro: {erro}")
 
-def deletarProduto(nome_produto):
+def deletarProduto(codigo_produto):
     try:
         conn, cursor = conectarMysql()
-        sql = "DELETE FROM Produto WHERE nome = %s"
-        val = (nome_produto,)
+        sql = "DELETE FROM Produto WHERE codigo = %s"
+        val = (codigo_produto,)
         cursor.execute(sql, val)
         conn.commit()
-        print(f"Produto '{nome_produto}' deletado")
         desconectarMysql(cursor, conn)
     except mysql.connector.Error as erro:
         print(f"Erro: {erro}")

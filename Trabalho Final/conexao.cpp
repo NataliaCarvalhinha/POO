@@ -51,7 +51,7 @@ void Conexao::remover(Produto* produto) {
 
         if (pFuncRemover && PyCallable_Check(pFuncRemover)) {
             PyObject *pArgs = PyTuple_New(1);
-            PyTuple_SetItem(pArgs, 0, PyUnicode_FromString(produto->getNome().c_str()));
+            PyTuple_SetItem(pArgs, 0, PyLong_FromLong(produto->getCodigo()));
             PyObject *pResultRemover = PyObject_CallObject(pFuncRemover, pArgs);
             if (pResultRemover != nullptr) {
                 Py_DECREF(pResultRemover);
@@ -107,16 +107,29 @@ Produto* Conexao::buscar(int id) {
             PyObject *pArgs = PyTuple_New(1);
             PyTuple_SetItem(pArgs, 0, PyLong_FromLong(id));
             PyObject *pResultBuscar = PyObject_CallObject(pFuncBuscar, pArgs);
-            if (pResultBuscar != nullptr) {
-                PyObject *pNome = PyTuple_GetItem(pResultBuscar, 1);
-                PyObject *pQuantidade = PyTuple_GetItem(pResultBuscar, 2);
-                PyObject *pValor = PyTuple_GetItem(pResultBuscar, 3);
-                string nome = PyUnicode_AsUTF8(pNome);
-                int quantidade = PyLong_AsLong(pQuantidade);
-                double valor = PyFloat_AsDouble(pValor);
-                produto = new Produto(nome, quantidade, valor, id);
+            
+            if (pResultBuscar != nullptr && pResultBuscar != Py_None) {
+                if (PyTuple_Check(pResultBuscar) && PyTuple_Size(pResultBuscar) == 4) {
+                    PyObject *pNome = PyTuple_GetItem(pResultBuscar, 1);
+                    PyObject *pQuantidade = PyTuple_GetItem(pResultBuscar, 2);
+                    PyObject *pValor = PyTuple_GetItem(pResultBuscar, 3);
+                    
+                    if (pNome && pQuantidade && pValor) {
+                        string nome = PyUnicode_AsUTF8(pNome);
+                        int quantidade = PyLong_AsLong(pQuantidade);
+                        double valor = PyFloat_AsDouble(pValor);
+                        produto = new Produto(nome, quantidade, valor, id);
+                    } else {
+                        PyErr_Print();
+                    }
+                } else {
+                    PyErr_SetString(PyExc_ValueError, "O formato do resultado retornado é inválido.");
+                    PyErr_Print();
+                }
                 Py_DECREF(pResultBuscar);
-
+            } else if (pResultBuscar == Py_None) {
+                cout << "Produto não encontrado." << endl;
+                Py_DECREF(pResultBuscar);
             } else {
                 PyErr_Print();
             }
@@ -174,7 +187,6 @@ void Conexao::listar() {
 
             PyObject *pResultListar = PyObject_CallObject(pFuncListar, pArgs);
             if (pResultListar != nullptr) {
-                // Assumindo que a função Python retorna uma lista de tuplas (id, nome, quantidade, valor)
                 Py_ssize_t tamanho = PyList_Size(pResultListar);
                 for (Py_ssize_t i = 0; i < tamanho; ++i) {
                     PyObject *pItem = PyList_GetItem(pResultListar, i);
@@ -188,7 +200,8 @@ void Conexao::listar() {
                     int quantidade = PyLong_AsLong(pQuantidade);
                     double valor = PyFloat_AsDouble(pValor);
 
-                    cout << "ID: " << id << ", Nome: " << nome << ", Quantidade: " << quantidade << ", Valor: " << valor << endl;
+                    Produto produtoResult(nome, quantidade, valor, id);
+                    cout << produtoResult;
                 }
                 Py_DECREF(pResultListar);
             } else {

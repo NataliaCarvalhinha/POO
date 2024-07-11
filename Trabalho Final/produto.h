@@ -8,19 +8,18 @@ using namespace std;
 
 class Produto {
     public:
-        Produto(string& nome, int quantidade, double valor, int codigo);
-        string getNome();
-        int getQuantidade();
-        double getValor();
-        int getCodigo();
-        void imprime(ostream& os);
+        Produto(const string& nome, int quantidade, double valor, int codigo);
+        string getNome() const;
+        int getQuantidade() const;
+        double getValor() const;
+        int getCodigo() const;
+        friend ostream& operator<<(ostream& os, const Produto& produto);
 
-    private:
+    protected:
         string nome;
         int quantidade;
         double valor;
         int codigo;
-
 };
 
 #endif
