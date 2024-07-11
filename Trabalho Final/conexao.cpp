@@ -37,21 +37,43 @@ void Conexao::inserir(Produto* produto) {
         } else {
             if (PyErr_Occurred()) PyErr_Print();
         }
-        cout << "Produto inserido." << endl;
     } else {
         PyErr_Print();
-    }
-
-    
+    }  
 }
 
-void Conexao::remover(Produto* produto) {
+void Conexao::inserirDesconto(ProdutoComDesconto* produto) {
+    if (pModule != nullptr) {
+        PyObject *pFuncInserir = PyObject_GetAttrString(pModule, "inserirDesconto");
+
+        if (pFuncInserir && PyCallable_Check(pFuncInserir)) {
+            PyObject *pArgs = PyTuple_New(2);
+            PyTuple_SetItem(pArgs, 0, PyLong_FromLong(produto->getCodigo()));
+            PyTuple_SetItem(pArgs, 1, PyFloat_FromDouble(produto->getDesconto()));
+
+            PyObject *pResultInserir = PyObject_CallObject(pFuncInserir, pArgs);
+            if (pResultInserir != nullptr) {
+                Py_DECREF(pResultInserir);
+            } else {
+                PyErr_Print();
+            }
+            Py_DECREF(pArgs);
+            Py_DECREF(pFuncInserir);
+        } else {
+            if (PyErr_Occurred()) PyErr_Print();
+        }
+    } else {
+        PyErr_Print();
+    }  
+}
+
+void Conexao::remover(int codigo) {
     if (pModule != nullptr) {
         PyObject *pFuncRemover = PyObject_GetAttrString(pModule, "deletarProduto");
 
         if (pFuncRemover && PyCallable_Check(pFuncRemover)) {
             PyObject *pArgs = PyTuple_New(1);
-            PyTuple_SetItem(pArgs, 0, PyLong_FromLong(produto->getCodigo()));
+            PyTuple_SetItem(pArgs, 0, PyLong_FromLong(codigo));
             PyObject *pResultRemover = PyObject_CallObject(pFuncRemover, pArgs);
             if (pResultRemover != nullptr) {
                 Py_DECREF(pResultRemover);
@@ -66,8 +88,29 @@ void Conexao::remover(Produto* produto) {
     } else {
         PyErr_Print();
     }
+}
 
-    cout << "Produto removido." << endl;
+void Conexao::removerDesconto(int codigo) {
+    if (pModule != nullptr) {
+        PyObject *pFuncRemover = PyObject_GetAttrString(pModule, "deletarDesconto");
+
+        if (pFuncRemover && PyCallable_Check(pFuncRemover)) {
+            PyObject *pArgs = PyTuple_New(1);
+            PyTuple_SetItem(pArgs, 0, PyLong_FromLong(codigo));
+            PyObject *pResultRemover = PyObject_CallObject(pFuncRemover, pArgs);
+            if (pResultRemover != nullptr) {
+                Py_DECREF(pResultRemover);
+            } else {
+                PyErr_Print();
+            }
+            Py_DECREF(pArgs);
+            Py_DECREF(pFuncRemover);
+        } else {
+            if (PyErr_Occurred()) PyErr_Print();
+        }
+    } else {
+        PyErr_Print();
+    }
 }
 
 void Conexao::atualizar(Produto* produto) {
@@ -95,30 +138,35 @@ void Conexao::atualizar(Produto* produto) {
     } else {
         PyErr_Print();
     }
-
-    cout << "Produto atualizado." << endl;
 }
 
-Produto* Conexao::buscar(int id) {
+Produto* Conexao::buscar(int codigo) {
     Produto* produto = nullptr;
     if (pModule != nullptr) {
         PyObject *pFuncBuscar = PyObject_GetAttrString(pModule, "buscarProduto");
         if (pFuncBuscar && PyCallable_Check(pFuncBuscar)) {
             PyObject *pArgs = PyTuple_New(1);
-            PyTuple_SetItem(pArgs, 0, PyLong_FromLong(id));
+            PyTuple_SetItem(pArgs, 0, PyLong_FromLong(codigo));
             PyObject *pResultBuscar = PyObject_CallObject(pFuncBuscar, pArgs);
             
             if (pResultBuscar != nullptr && pResultBuscar != Py_None) {
-                if (PyTuple_Check(pResultBuscar) && PyTuple_Size(pResultBuscar) == 4) {
+                if (PyTuple_Check(pResultBuscar) && PyTuple_Size(pResultBuscar) == 5) {
                     PyObject *pNome = PyTuple_GetItem(pResultBuscar, 1);
                     PyObject *pQuantidade = PyTuple_GetItem(pResultBuscar, 2);
                     PyObject *pValor = PyTuple_GetItem(pResultBuscar, 3);
-                    
+                    PyObject *pDesconto = PyTuple_GetItem(pResultBuscar, 4);
+
                     if (pNome && pQuantidade && pValor) {
                         string nome = PyUnicode_AsUTF8(pNome);
                         int quantidade = PyLong_AsLong(pQuantidade);
                         double valor = PyFloat_AsDouble(pValor);
-                        produto = new Produto(nome, quantidade, valor, id);
+                        double desconto = PyFloat_AsDouble(pDesconto);
+
+                        if (pDesconto != Py_None){
+                            produto = new ProdutoComDesconto(nome, quantidade, valor, codigo, desconto);
+                        } else {
+                            produto = new Produto(nome, quantidade, valor, codigo);
+                        }
                     } else {
                         PyErr_Print();
                     }
@@ -145,7 +193,7 @@ Produto* Conexao::buscar(int id) {
     return produto;
 }
 
-Produto* Conexao::buscar(string& nome) {
+Produto* Conexao::buscar(const string& nome) {
     Produto* produto = nullptr;
     if (pModule != nullptr) {
         PyObject *pFuncBuscar = PyObject_GetAttrString(pModule, "buscarProdutoNome");
@@ -158,10 +206,10 @@ Produto* Conexao::buscar(string& nome) {
                 PyObject *pId = PyTuple_GetItem(pResultBuscar, 0);
                 PyObject *pQuantidade = PyTuple_GetItem(pResultBuscar, 2);
                 PyObject *pValor = PyTuple_GetItem(pResultBuscar, 3);
-                int id = PyLong_AsLong(pId);
+                int codigo = PyLong_AsLong(pId);
                 int quantidade = PyLong_AsLong(pQuantidade);
                 double valor = PyFloat_AsDouble(pValor);
-                produto = new Produto(nome, quantidade, valor, id);
+                produto = new Produto(nome, quantidade, valor, codigo);
                 Py_DECREF(pResultBuscar);
             } else {
                 PyErr_Print();
@@ -194,14 +242,21 @@ void Conexao::listar() {
                     PyObject *pNome = PyTuple_GetItem(pItem, 1);
                     PyObject *pQuantidade = PyTuple_GetItem(pItem, 2);
                     PyObject *pValor = PyTuple_GetItem(pItem, 3);
+                    PyObject *pDesconto = PyTuple_GetItem(pItem, 4);
 
-                    int id = PyLong_AsLong(pId);
+                    int codigo = PyLong_AsLong(pId);
                     string nome = PyUnicode_AsUTF8(pNome);
                     int quantidade = PyLong_AsLong(pQuantidade);
                     double valor = PyFloat_AsDouble(pValor);
+                    double desconto = PyFloat_AsDouble(pDesconto);
+                    Produto* produtoResult = nullptr;
 
-                    Produto produtoResult(nome, quantidade, valor, id);
-                    cout << produtoResult;
+                    if (pDesconto != Py_None) {
+                        produtoResult = new ProdutoComDesconto(nome, quantidade, valor, codigo, desconto);
+                    } else {
+                        produtoResult = new Produto(nome, quantidade, valor, codigo);
+                    }
+                    cout << *produtoResult;
                 }
                 Py_DECREF(pResultListar);
             } else {

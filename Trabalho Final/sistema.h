@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include "produto.h"
+#include "produtoComDesconto.h"
 #include "conexao.h"
 
 class Sistema {
@@ -10,10 +11,11 @@ class Sistema {
         Sistema();
         ~Sistema();
         void inserir(Produto* produto);
-        void remover(Produto* produto);
+        void inserirDesconto(ProdutoComDesconto* produto);
+        void remover(int codigo);
+        void removerDesconto(int codigo);
         void atualizar(Produto* produto);
-        Produto* buscar(int id);
-        Produto* buscar(string& nome);
+        Produto* buscar(int codigo);
         void listar();
         Conexao* conexao = nullptr;
 };

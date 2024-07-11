@@ -9,10 +9,12 @@ using namespace std;
 class Produto {
     public:
         Produto(const string& nome, int quantidade, double valor, int codigo);
-        string getNome() const;
+        virtual ~Produto();
+        const string& getNome() const;
         int getQuantidade() const;
         double getValor() const;
         int getCodigo() const;
+        virtual void imprime(ostream& os) const;
         friend ostream& operator<<(ostream& os, const Produto& produto);
 
     protected:

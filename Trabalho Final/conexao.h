@@ -5,6 +5,7 @@
 #include <string>
 #include <boost/python.hpp>
 #include "produto.h"
+#include "produtoComDesconto.h"
 
 using namespace std;
 
@@ -13,10 +14,12 @@ class Conexao {
         Conexao();
         ~Conexao();
         void inserir(Produto* produto);
-        void remover(Produto* produto);
+        void inserirDesconto(ProdutoComDesconto* produto);
+        void remover(int codigo);
+        void removerDesconto(int codigo);
         void atualizar(Produto* produto);
-        Produto* buscar(int id);
-        Produto* buscar(string& nome);
+        Produto* buscar(int codigo);
+        Produto* buscar(const string& nome);
         void listar();
         PyObject *pModule = nullptr;
 };

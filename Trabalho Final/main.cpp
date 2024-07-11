@@ -2,6 +2,7 @@
 #include <limits>
 #include "sistema.h"
 #include "produto.h"
+#include "produtoComDesconto.h"
 
 using namespace std;
 
@@ -15,9 +16,10 @@ void menu() {
     cout << "1. Inserir Produto" << endl;
     cout << "2. Remover Produto" << endl;
     cout << "3. Atualizar Produto" << endl;
-    cout << "4. Buscar Produto por ID" << endl;
-    cout << "5. Buscar Produto por Nome" << endl;
-    cout << "6. Listar Produtos" << endl;
+    cout << "4. Buscar Produto por codigo" << endl;
+    cout << "5. Adicionar Desconto ao Produto" << endl;
+    cout << "6. Remover Desconto por codigo" << endl;
+    cout << "7. Listar Produtos" << endl;
     cout << "0. Sair" << endl;
 }
 
@@ -25,11 +27,12 @@ int main() {
     Sistema* sistema = new Sistema();
     int opcao;
     Produto* produto;
-    int id;
+    int codigo;
     string nome;
     int quantidade;
     double valor;
-    int codigo;
+    char tipoProduto;
+    double desconto;
 
     do {
         menu();
@@ -39,6 +42,9 @@ int main() {
 
         switch (opcao) {
             case 1:
+                cout << endl << "Digite o tipo do produto (s - simples, d - com desconto): ";
+                cin >> tipoProduto;
+                limpaBuffer();
                 cout << "Digite o nome do produto: ";
                 cin >> nome;
                 limpaBuffer();
@@ -48,24 +54,27 @@ int main() {
                 cout << "Digite o valor: ";
                 cin >> valor;
                 limpaBuffer();
-                produto = new Produto(nome, quantidade, valor, 0);
+
+                if (tipoProduto == 'd') {
+                    cout << "Digite o desconto (%): ";
+                    cin >> desconto;
+                    limpaBuffer();
+                    produto = new ProdutoComDesconto(nome, quantidade, valor, 0, desconto);
+                } else {
+                    produto = new Produto(nome, quantidade, valor, 0);
+                }
                 sistema->inserir(produto);
                 delete produto;
                 break;
             case 2:
-                cout << "Digite o código do produto a ser removido: ";
-                cin >> id;
+                cout << endl << "Digite o código do produto a ser removido: ";
+                cin >> codigo;
                 limpaBuffer();
-                produto = sistema->buscar(id);
-                if (produto != nullptr) {
-                    sistema->remover(produto);
-                    delete produto;
-                } else {
-                    cout << "Produto não encontrado." << endl;
-                }
+                sistema->remover(codigo);
+                delete produto;
                 break;
             case 3:
-                cout << "Digite o código do produto a ser atualizado: ";
+                cout << endl << "Digite o código do produto a ser atualizado: ";
                 cin >> codigo;
                 limpaBuffer();
                 produto = sistema->buscar(codigo);
@@ -83,36 +92,52 @@ int main() {
                     sistema->atualizar(produtoAtualizado);
                     delete produtoAtualizado;
                     delete produto;
-                } 
+                    cout << endl << "Produto atualizado!" << endl;
+                } else {
+                    cout << endl << "Produto não encontrado." << endl;
+                }
                 break;
             case 4:
-                cout << "Digite o ID do produto: ";
-                cin >> id;
+                cout << endl << "Digite o codigo do produto: ";
+                cin >> codigo;
                 limpaBuffer();
-                produto = sistema->buscar(id);
+                produto = sistema->buscar(codigo);
                 if (produto != nullptr) {
-                    cout << produto;
+                    cout << *produto;
                     delete produto;
                 }
                 break;
             case 5:
-                cout << "Digite o nome do produto: ";
-                cin >> nome;
+                cout << endl << "Digite o código do produto a obter desconto: ";
+                cin >> codigo;
                 limpaBuffer();
-                produto = sistema->buscar(nome);
+                produto = sistema->buscar(codigo);
                 if (produto != nullptr) {
-                    cout  << produto;
+                    cout << "Digite o desconto: ";
+                    cin >> desconto;
+                    limpaBuffer();
+                    produto = new ProdutoComDesconto(produto->getNome(), produto->getQuantidade(), produto->getValor(), codigo, desconto);
+                    sistema->inserirDesconto(dynamic_cast<ProdutoComDesconto*>(produto));
+                    cout << endl << "Desconto do produto atualizado!" << endl;
                     delete produto;
+                } else {
+                    cout << endl << "Produto não encontrado." << endl;
                 }
                 break;
             case 6:
+                cout << endl << "Digite o código do produto com o desconto a ser removido: ";
+                cin >> codigo;
+                limpaBuffer();
+                sistema->removerDesconto(codigo);
+                break;
+            case 7:
                 sistema->listar();
                 break;
             case 0:
-                cout << "Saindo..." << endl;
+                cout << endl << "Saindo..." << endl;
                 break;
             default:
-                cout << "Opção inválida!" << endl;
+                cout << endl << "Opção inválida!" << endl;
                 break;
         }
     } while (opcao != 0);
