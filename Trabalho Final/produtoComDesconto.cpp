@@ -20,8 +20,8 @@ void ProdutoComDesconto::imprime(ostream& os) const{
     os << endl << "---------------------" << endl 
        << "Nome: " << getNome() << ", " 
        << endl << "Quantidade: " << getQuantidade()
-       << endl << "Valor: " << getValor()
+       << endl << "Valor: R$" << getValor()
        << endl << "Desconto: " << getDesconto()
-       << endl << "Valor com desconto: " << getValorComDesconto()
+       << endl << "Valor com desconto: R$" << fixed << setprecision(2) << getValorComDesconto()
        << endl << "Codigo: " << getCodigo();
 }

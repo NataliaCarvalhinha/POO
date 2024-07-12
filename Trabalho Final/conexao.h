@@ -21,6 +21,7 @@ class Conexao {
         Produto* buscar(int codigo);
         Produto* buscar(const string& nome);
         void listar();
+    private:
         PyObject *pModule = nullptr;
 };
 

@@ -29,6 +29,6 @@ void Produto::imprime(ostream& os) const {
     os << endl << "---------------------" << endl 
        << "Nome: " << getNome() << ", " 
        << endl << "Quantidade: " << getQuantidade()
-       << endl << "Valor: " << getValor()
+       << endl << "Valor: R$" << getValor()
        << endl << "Codigo: " << getCodigo();
 }

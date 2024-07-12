@@ -93,8 +93,6 @@ int main() {
                     delete produtoAtualizado;
                     delete produto;
                     cout << endl << "Produto atualizado!" << endl;
-                } else {
-                    cout << endl << "Produto não encontrado." << endl;
                 }
                 break;
             case 4:

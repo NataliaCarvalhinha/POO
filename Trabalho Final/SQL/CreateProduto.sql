@@ -8,6 +8,6 @@ CREATE TABLE Produto (
 CREATE TABLE ProdutoDesconto (
     codigo INT PRIMARY KEY,
     FOREIGN KEY (codigo) REFERENCES Produto(codigo),
-    descontoPorcentagem DECIMAL(5, 2) NOT NULL
+    desconto DECIMAL(5, 2) NOT NULL
     ON DELETE CASCADE
 );
